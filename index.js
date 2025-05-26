@@ -48,7 +48,7 @@ app.post('/tags', verifyLicense, async (req, res) => {
   const { image, product_name } = req.body;
   try {
     const prompt = `Generate 8 SEO product tags and 1-paragraph product description for: ${product_name || 'a product'}`;
-    const response = await openai.createChatCompletion({
+    const response = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: [{ role: "user", content: prompt }]
     });
