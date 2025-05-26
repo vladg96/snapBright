@@ -40,6 +40,7 @@ app.post('/enhance', verifyLicense, async (req, res) => {
 
     res.json({ enhanced_image: "https://example.com/enhanced-image.png" });
   } catch (err) {
+    console.error('[REPLICATE ERROR]', err.response?.data || err.message || err);
     res.status(500).json({ error: 'Failed to process image' });
   }
 });
