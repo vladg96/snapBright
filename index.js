@@ -1,6 +1,6 @@
 require('dotenv').config();
 const express = require('express');
-const { Configuration, OpenAIApi } = require('openai');
+const OpenAI = require("openai");
 const { createClient } = require('@supabase/supabase-js');
 const axios = require('axios');
 
@@ -9,9 +9,9 @@ app.use(express.json({ limit: '10mb' }));
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 
-const openai = new OpenAIApi(new Configuration({
+const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
-}));
+});
 
 const verifyLicense = async (req, res, next) => {
   const key = req.headers['x-license-key'];
