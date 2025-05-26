@@ -24,11 +24,11 @@ const verifyLicense = async (req, res, next) => {
 };
 
 app.post('/enhance', verifyLicense, async (req, res) => {
-  const { image, background_style, prompt, add_shadow, crop_to_square, upscale, output_format } = req.body;
+  const { image } = req.body;
   if (!image) return res.status(400).json({ error: 'Image is required' });
 
   try {
-    const rembg = await axios.post('https://api.replicate.com/v1/predictions', {
+    const prediction = await axios.post('https://api.replicate.com/v1/predictions', {
       version: "21e1de4bba0e5f7cd9b0cf9dc6a1cc0b75cdbdbb77a86aaae1cb8d80c6b0f87f",
       input: { image }
     }, {
@@ -38,7 +38,31 @@ app.post('/enhance', verifyLicense, async (req, res) => {
       }
     });
 
-    res.json({ enhanced_image: "https://example.com/enhanced-image.png" });
+    const predictionId = prediction.data.id;
+
+    // Poll until the image is ready
+    let output = null;
+    for (let i = 0; i < 20; i++) {
+      const result = await axios.get(`https://api.replicate.com/v1/predictions/${predictionId}`, {
+        headers: {
+          Authorization: `Token ${process.env.REPLICATE_API_TOKEN}`
+        }
+      });
+
+      if (result.data.status === 'succeeded') {
+        output = result.data.output;
+        break;
+      } else if (result.data.status === 'failed') {
+        throw new Error('Image processing failed');
+      }
+
+      // Wait 1 second before checking again
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+
+    if (!output) return res.status(500).json({ error: 'Timeout waiting for image result' });
+
+    res.json({ enhanced_image: output });
   } catch (err) {
     console.error('[REPLICATE ERROR]', err.response?.data || err.message || err);
     res.status(500).json({ error: 'Failed to process image' });
