@@ -61,14 +61,14 @@ app.post('/tags', verifyLicense, async (req, res) => {
 
 app.post('/activate', async (req, res) => {
   const { email, licenseKey, stripeCustomerId } = req.body;
-  const { data, error } = await supabase.from('licenses').insert([{ email, licenseKey, stripeCustomerId, status: 'active' }]);
+  const { data, error } = await supabase.from('license').insert([{ email, licenseKey, stripeCustomerId, status: 'active' }]);
   if (error) return res.status(500).json({ error: 'Activation failed' });
   res.json({ success: true });
 });
 
 app.post('/verify', async (req, res) => {
   const { licenseKey } = req.body;
-  const { data, error } = await supabase.from('licenses').select('*').eq('licenseKey', licenseKey).eq('status', 'active');
+  const { data, error } = await supabase.from('license').select('*').eq('licenseKey', licenseKey).eq('status', 'active');
   if (error || !data.length) return res.status(403).json({ error: 'Invalid license' });
   res.json({ valid: true });
 });
