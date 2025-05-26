@@ -29,7 +29,7 @@ app.post('/enhance', verifyLicense, async (req, res) => {
 
   try {
     const prediction = await axios.post('https://api.replicate.com/v1/predictions', {
-      version: "21e1de4bba0e5f7cd9b0cf9dc6a1cc0b75cdbdbb77a86aaae1cb8d80c6b0f87f",
+      version: "fb8af171cfa1616ddcf1242c093f9c46bcada5ad4cf6f2fbe8b81b330ec5c003",
       input: { image }
     }, {
       headers: {
