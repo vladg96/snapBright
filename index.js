@@ -45,17 +45,19 @@ app.post('/enhance', verifyLicense, async (req, res) => {
 });
 
 app.post('/tags', verifyLicense, async (req, res) => {
-  const { image, product_name } = req.body;
+  const { product_name } = req.body;
   try {
-    const prompt = `Generate 8 SEO product tags and 1-paragraph product description for: ${product_name || 'a product'}`;
+    const prompt = `Generate 8 SEO product tags and a 1-paragraph product description for: ${product_name || 'a product'}`;
+
     const response = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: [{ role: "user", content: prompt }]
     });
 
-    res.json({ result: response.data.choices[0].message.content });
+    const message = response.choices[0].message.content;
+    res.json({ result: message });
   } catch (err) {
-    console.error(err.response?.data || err.message || err);
+    console.error('[OPENAI ERROR]', err.response?.data || err.message || err);
     res.status(500).json({ error: 'Failed to generate tags' });
   }
 });
