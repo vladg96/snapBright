@@ -17,7 +17,7 @@ const verifyLicense = async (req, res, next) => {
   const key = req.headers['x-license-key'];
   if (!key) return res.status(401).json({ error: 'Missing license key' });
 
-  const { data, error } = await supabase.from('licenses').select('*').eq('licenseKey', key).eq('status', 'active');
+  const { data, error } = await supabase.from('license').select('*').eq('licenseKey', key).eq('status', 'active');
   if (error || !data.length) return res.status(403).json({ error: 'Invalid or inactive license' });
 
   next();
