@@ -29,7 +29,7 @@ app.post('/enhance', verifyLicense, async (req, res) => {
 
   try {
     const rembg = await axios.post('https://api.replicate.com/v1/predictions', {
-      version: "your-rembg-model-id",
+      version: "21e1de4bba0e5f7cd9b0cf9dc6a1cc0b75cdbdbb77a86aaae1cb8d80c6b0f87f",
       input: { image }
     }, {
       headers: {
