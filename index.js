@@ -57,7 +57,7 @@ app.post('/enhance', verifyLicense, async (req, res) => {
       }
 
       // Wait 1 second before checking again
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 1500));
     }
 
     if (!output) return res.status(500).json({ error: 'Timeout waiting for image result' });
