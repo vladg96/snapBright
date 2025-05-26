@@ -55,6 +55,7 @@ app.post('/tags', verifyLicense, async (req, res) => {
 
     res.json({ result: response.data.choices[0].message.content });
   } catch (err) {
+    console.error(err.response?.data || err.message || err);
     res.status(500).json({ error: 'Failed to generate tags' });
   }
 });
